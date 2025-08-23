@@ -194,6 +194,8 @@ const TodoApp = () => {
         </div>
       )}
 
+      <div className="divider" />
+
       <div className="todo-content">
         <AddTodo onAdd={addTodo} />
         <TodoList
