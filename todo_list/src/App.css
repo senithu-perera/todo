@@ -3,9 +3,12 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  /* layered backgrounds: gradient overlay on top of user-provided image (public/hearts-bg.png)
-    If the image isn't present, the gradient will be visible as a fallback. */
-  background-image: url('background.jpg');
+  /* layered backgrounds: gradient overlay on top of an image placed in `public/`.
+    Place the image file (example: hearts-bg.png or Background.jpg) into the project's `public/` folder.
+    IMPORTANT: Netlify (Linux) is case-sensitive. Use exact filename casing and reference it with a leading slash.
+    Example filename to add: public/hearts-bg.png
+    If the image is missing the gradient will still act as a fallback. */
+  background-image: linear-gradient(180deg, rgba(161,140,209,0.45)), url('/public/Background.jpg');
   background-repeat: no-repeat, no-repeat;
   background-position: center center, center center;
   background-size: cover, cover;
