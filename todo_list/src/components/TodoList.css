@@ -2,11 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  /* constrain the list height so it scrolls independently of the page
-     subtract estimated space used by header/add area (approx 280px) */
-  /* allow the list to grow inside .todo-content and scroll when needed */
-  flex: 1 1 auto;
-  min-height: 0;
+  /* Set a max-height based on the viewport height to make the list scrollable */
+  max-height: 55vh;
   overflow-y: auto;
   padding-right: 6px; /* allow space for scrollbar */
   scroll-behavior: smooth;

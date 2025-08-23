@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-image: linear-gradient(180deg, rgba(161,140,209,0.45)), url('/Background.jpg');
+  background-image: url('/Background.jpg');
   background-repeat: no-repeat, no-repeat;
   background-position: center center, center center;
   background-size: cover, cover;
