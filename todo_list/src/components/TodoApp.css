@@ -1,34 +1,45 @@
 .todo-app {
-  max-width: none;
-  width: 100vw;
+  max-width: 600px;
+  width: 100%;
   min-height: 100vh;
-  margin: 0;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 0px 0 60px 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .todo-header {
   text-align: center;
   margin-bottom: 30px;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px 16px 16px 16px;
+  background: linear-gradient(135deg, #a18cd1 0%, #6a4bc6 100%);
   color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 24px rgba(102, 126, 234, 0.18);
+  /* full-bleed header while keeping content centered — use transform so we don't trigger scrollbars */
+  position: relative;
+  /* center against the viewport (not the parent) so the full-bleed header stays aligned on wide screens */
+  left: 50vw;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 .todo-header h1 {
   margin: 0 0 15px 0;
-  font-size: 2.5rem;
-  font-weight: 300;
+  font-size: 2.6rem;
+  font-weight: 400;
+  letter-spacing: 1px;
 }
 
 .user-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -38,65 +49,159 @@
   font-size: 1.1rem;
 }
 
-.connection-status {
-  padding: 5px 12px;
+.sign-out-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
-  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.connection-status.connected {
-  background: rgba(76, 175, 80, 0.2);
-  border: 1px solid rgba(76, 175, 80, 0.5);
+.sign-out-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
-.connection-status.disconnected {
-  background: rgba(244, 67, 54, 0.2);
-  border: 1px solid rgba(244, 67, 54, 0.5);
+.error-banner {
+  background: #fee;
+  color: #c33;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #fcc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.connected-users {
-  font-size: 0.9rem;
-  opacity: 0.9;
+.error-close {
+  background: none;
+  border: none;
+  color: #c33;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background: rgba(204, 51, 51, 0.1);
 }
 
 .todo-content {
   background: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 24px 16px;
+  box-shadow: 0 2px 20px rgba(106, 75, 198, 0.08);
+  width: 100%;
+  max-width: 560px;
+  margin: 12px auto 0 auto;
 }
-
-.offline-message {
-  margin-top: 20px;
-  padding: 15px;
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 8px;
-  color: #856404;
-  text-align: center;
-}
-
-.offline-message p {
-  margin: 0;
-  font-weight: 500;
-}
-
 @media (max-width: 600px) {
   .todo-app {
-    padding: 10px;
+    padding: 0;
+    min-height: 100vh;
+    max-width: 100vw;
   }
-  
+  .todo-header {
+    padding: 18px 6px 10px 6px;
+    border-radius: 0 0 16px 16px;
+    width: 100vw;
+    max-width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
   .todo-header h1 {
-    font-size: 2rem;
+    font-size: 1.4rem;
   }
-  
   .user-info {
     flex-direction: column;
     text-align: center;
+    gap: 10px;
   }
-  
   .todo-content {
-    padding: 15px;
+    padding: 10px 4px;
+    border-radius: 12px;
+    max-width: 98vw;
   }
+  .error-banner {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
+
+/* Large-screen adjustments: make UI larger and more comfortable on wide displays */
+@media (min-width: 900px) {
+  .todo-app {
+    max-width: 1000px;
+    padding: 0px 0 80px 0;
+  }
+
+  .todo-header {
+    padding: 36px 24px 28px 24px;
+    border-radius: 0 0 18px 18px;
+  }
+
+  .todo-header h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .todo-content {
+    max-width: 720px;
+    padding: 32px 24px;
+    border-radius: 18px;
+  }
+
+  .loading-container {
+    min-height: 60vh;
+  }
+
+  .loading-spinner {
+    width: 64px;
+    height: 64px;
+    border-width: 6px;
+    margin-bottom: 20px;
+  }
+}
+
+.loading-container {
+  min-height: 50vh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(161, 140, 209, 0.35);
+  border-top: 5px solid #6a4bc6; /* stronger contrast on the gradient */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

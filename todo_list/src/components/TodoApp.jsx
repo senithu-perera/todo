@@ -1,124 +1,198 @@
 import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase, todosService } from "../lib/supabase";
 import TodoList from "./TodoList";
 import AddTodo from "./AddTodo";
-import UserSelector from "./UserSelector";
 import "./TodoApp.css";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
-  const [socket, setSocket] = useState(null);
-  const [connectedUsers, setConnectedUsers] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { user, signOut } = useAuth();
 
+  // Load todos when component mounts
   useEffect(() => {
-    // Initialize socket connection
-    const newSocket = io("http://localhost:3001");
-    setSocket(newSocket);
-
-    // Socket event listeners
-    newSocket.on("connect", () => {
-      setIsConnected(true);
-      console.log("Connected to server");
-    });
-
-    newSocket.on("disconnect", () => {
-      setIsConnected(false);
-      console.log("Disconnected from server");
-    });
-
-    newSocket.on("todoUpdate", (updatedTodos) => {
-      setTodos(updatedTodos);
-    });
-
-    newSocket.on("usersUpdate", (users) => {
-      setConnectedUsers(users);
-    });
-
-    // Cleanup on unmount
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (socket && currentUser) {
-      socket.emit("userJoin", currentUser);
+    if (user) {
+      loadTodos();
+      // Subscribe to real-time updates
+      const subscription = todosService.subscribeToTodos(handleRealtimeUpdate);
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      };
     }
-  }, [socket, currentUser]);
+  }, [user]);
 
-  const addTodo = (text) => {
-    const newTodo = {
-      id: uuidv4(),
-      text,
-      completed: false,
-      createdBy: currentUser,
-      createdAt: new Date().toISOString(),
-    };
-
-    const updatedTodos = [...todos, newTodo];
-    setTodos(updatedTodos);
-
-    if (socket) {
-      socket.emit("todosUpdate", updatedTodos);
+  const loadTodos = async () => {
+    try {
+      setLoading(true);
+      const data = await todosService.getTodos();
+      setTodos(data || []);
+    } catch (error) {
+      setError("Failed to load todos: " + error.message);
+      console.error("Error loading todos:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const toggleTodo = (id) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  const handleRealtimeUpdate = (payload) => {
+    console.log("Real-time update:", payload);
+
+    switch (payload.eventType) {
+      case "INSERT":
+        setTodos((prev) => {
+          const exists = prev.some((todo) => todo.id === payload.new.id);
+          if (exists) return prev;
+          return [payload.new, ...prev];
+        });
+        break;
+      case "UPDATE":
+        setTodos((prev) =>
+          prev.map((todo) => (todo.id === payload.new.id ? payload.new : todo))
+        );
+        break;
+      case "DELETE":
+        setTodos((prev) => prev.filter((todo) => todo.id !== payload.old.id));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addTodo = async (text) => {
+    try {
+      const newTodo = {
+        id: uuidv4(),
+        text,
+        completed: false,
+        createdBy: user.email,
+        name: user.name || (user.email ? user.email.split("@")[0] : ""),
+        createdAt: new Date().toISOString(),
+      };
+
+      // Optimistic update
+      setTodos((prev) => [newTodo, ...prev]);
+
+      // Save to database
+      await todosService.addTodo(newTodo);
+    } catch (error) {
+      setError("Failed to add todo: " + error.message);
+      console.error("Error adding todo:", error);
+      // Revert optimistic update
+      loadTodos();
+    }
+  };
+
+  const toggleTodo = async (id) => {
+    try {
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+
+      const updatedTodo = { ...todo, completed: !todo.completed };
+
+      // Optimistic update
+      setTodos((prev) => prev.map((t) => (t.id === id ? updatedTodo : t)));
+
+      // Save to database
+      await todosService.updateTodo(id, { completed: updatedTodo.completed });
+    } catch (error) {
+      setError("Failed to update todo: " + error.message);
+      console.error("Error updating todo:", error);
+      // Revert optimistic update
+      loadTodos();
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    try {
+      // Optimistic update
+      setTodos((prev) => prev.filter((todo) => todo.id !== id));
+
+      // Delete from database
+      await todosService.deleteTodo(id);
+    } catch (error) {
+      setError("Failed to delete todo: " + error.message);
+      console.error("Error deleting todo:", error);
+      // Revert optimistic update
+      loadTodos();
+    }
+  };
+
+  const editTodo = async (id, newText) => {
+    try {
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+
+      const updatedTodo = { ...todo, text: newText };
+
+      // Optimistic update
+      setTodos((prev) => prev.map((t) => (t.id === id ? updatedTodo : t)));
+
+      // Save to database
+      await todosService.updateTodo(id, { text: newText });
+    } catch (error) {
+      setError("Failed to edit todo: " + error.message);
+      console.error("Error editing todo:", error);
+      // Revert optimistic update
+      loadTodos();
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      setError("Failed to sign out: " + error.message);
+    }
+  };
+
+  const clearError = () => setError("");
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading your todos...</p>
+      </div>
     );
-    setTodos(updatedTodos);
-
-    if (socket) {
-      socket.emit("todosUpdate", updatedTodos);
-    }
-  };
-
-  const deleteTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
-
-    if (socket) {
-      socket.emit("todosUpdate", updatedTodos);
-    }
-  };
-
-  const editTodo = (id, newText) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, text: newText } : todo
-    );
-    setTodos(updatedTodos);
-
-    if (socket) {
-      socket.emit("todosUpdate", updatedTodos);
-    }
-  };
-
-  if (!currentUser) {
-    return <UserSelector onUserSelect={setCurrentUser} />;
   }
+
+  // Helper to get display name from user object
+  const getDisplayName = (userObj) => {
+    if (!userObj) return "";
+    if (userObj.name) return userObj.name;
+    if (userObj.email) return userObj.email.split("@")[0];
+    return "";
+  };
 
   return (
     <div className="todo-app">
       <header className="todo-header">
-        <h1>Shared Todo List</h1>
+        <h1>Our Todo List ❤️</h1>
         <div className="user-info">
-          <span className="current-user">User: {currentUser}</span>
-          <span
-            className={`connection-status ${
-              isConnected ? "connected" : "disconnected"
-            }`}
+          <span className="current-user">Welcome, {getDisplayName(user)}</span>
+          <button
+            className="sign-out-btn"
+            onClick={handleSignOut}
+            title="Sign out"
           >
-            {isConnected ? "🟢 Connected" : "🔴 Disconnected"}
-          </span>
-        </div>
-        <div className="connected-users">
-          <span>Online users: {connectedUsers.join(", ")}</span>
+            Sign Out
+          </button>
         </div>
       </header>
+
+      {error && (
+        <div className="error-banner">
+          <span>{error}</span>
+          <button onClick={clearError} className="error-close">
+            ×
+          </button>
+        </div>
+      )}
 
       <div className="todo-content">
         <AddTodo onAdd={addTodo} />
@@ -127,15 +201,9 @@ const TodoApp = () => {
           onToggle={toggleTodo}
           onDelete={deleteTodo}
           onEdit={editTodo}
-          currentUser={currentUser}
+          currentUser={getDisplayName(user)}
         />
       </div>
-
-      {!isConnected && (
-        <div className="offline-message">
-          <p>⚠️ You're offline. Changes will not sync with other users.</p>
-        </div>
-      )}
     </div>
   );
 };

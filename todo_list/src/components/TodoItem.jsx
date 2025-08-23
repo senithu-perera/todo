@@ -30,6 +30,13 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
     return date.toLocaleString();
   };
 
+  // Helper to get display name from todo object
+  const getDisplayName = (todo) => {
+    if (todo.name) return todo.name;
+    if (todo.createdBy) return todo.createdBy.split("@")[0];
+    return "";
+  };
+
   return (
     <div className={`todo-item ${todo.completed ? "completed" : ""}`}>
       <div className="todo-main">
@@ -87,8 +94,8 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
 
       <div className="todo-meta">
         <span className="todo-creator">
-          Created by: <strong>{todo.createdBy}</strong>
-          {todo.createdBy === currentUser && " (You)"}
+          Created by: <strong>{getDisplayName(todo)}</strong>
+          {getDisplayName(todo) === currentUser && " (You)"}
         </span>
         <span className="todo-date">{formatDate(todo.createdAt)}</span>
       </div>
