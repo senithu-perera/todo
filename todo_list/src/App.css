@@ -8,7 +8,7 @@ html, body {
   background-position: center center, center center;
   background-size: cover, cover;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  overflow-x: hidden; /* prevent horizontal scroll caused by full-bleed header */
+  overflow-x: hidden;
 }
 
 #root {
