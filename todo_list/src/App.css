@@ -5,7 +5,7 @@ html, body {
   width: 100%;
   /* layered backgrounds: gradient overlay on top of user-provided image (public/hearts-bg.png)
     If the image isn't present, the gradient will be visible as a fallback. */
-  background-image: url('Background.jpg');
+  background-image: url('background.jpg');
   background-repeat: no-repeat, no-repeat;
   background-position: center center, center center;
   background-size: cover, cover;
