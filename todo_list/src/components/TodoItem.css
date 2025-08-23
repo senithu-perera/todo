@@ -1,0 +1,153 @@
+.todo-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.2s ease;
+}
+
+.todo-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.todo-item.completed {
+  opacity: 0.7;
+  background: #f1f3f4;
+}
+
+.todo-main {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.todo-toggle {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #667eea;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #667eea;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.todo-toggle:hover {
+  background: #667eea;
+  color: white;
+  transform: scale(1.1);
+}
+
+.todo-item.completed .todo-toggle {
+  background: #4caf50;
+  border-color: #4caf50;
+  color: white;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 1rem;
+  cursor: pointer;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: #666;
+}
+
+.todo-edit {
+  flex: 1;
+}
+
+.todo-edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #667eea;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  background: white;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.todo-edit-btn,
+.todo-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.todo-edit-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.todo-delete:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.todo-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #666;
+  border-top: 1px solid #e9ecef;
+  padding-top: 10px;
+  margin-top: 5px;
+}
+
+.todo-creator {
+  font-weight: normal;
+}
+
+.todo-creator strong {
+  color: #333;
+}
+
+.todo-date {
+  color: #999;
+}
+
+@media (max-width: 600px) {
+  .todo-item {
+    padding: 12px;
+  }
+  
+  .todo-main {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .todo-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .todo-actions {
+    opacity: 1; /* Always show on mobile */
+  }
+}
