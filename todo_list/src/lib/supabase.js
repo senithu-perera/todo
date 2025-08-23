@@ -41,7 +41,8 @@ export const todosService = {
           text: todo.text,
           completed: todo.completed,
           created_by: todo.createdBy,
-          created_at: todo.createdAt
+          created_at: todo.createdAt,
+          name: todo.name,
         }
       ])
       .select()

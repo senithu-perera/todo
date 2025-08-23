@@ -21,7 +21,12 @@ const AddTodo = ({ onAdd }) => {
         onChange={(e) => setText(e.target.value)}
         className="add-todo-input"
       />
-      <button type="submit" disabled={!text.trim()}>
+      <button type="submit" disabled={!text.trim()} title="Add todo">
+        <i
+          className="fa-solid fa-plus"
+          style={{ marginRight: 8 }}
+          aria-hidden
+        ></i>
         Add
       </button>
     </form>

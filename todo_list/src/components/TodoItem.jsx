@@ -45,7 +45,11 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
           onClick={() => onToggle(todo.id)}
           title={todo.completed ? "Mark as incomplete" : "Mark as complete"}
         >
-          {todo.completed ? "✓" : "○"}
+          {todo.completed ? (
+            <i className="fa-solid fa-circle-check" aria-hidden></i>
+          ) : (
+            <i className="fa-regular fa-circle" aria-hidden></i>
+          )}
         </button>
 
         {isEditing ? (
@@ -78,14 +82,14 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
                 onClick={() => setIsEditing(true)}
                 title="Edit todo"
               >
-                ✏️
+                <i className="fa-solid fa-pen-to-square" aria-hidden></i>
               </button>
               <button
                 className="todo-delete"
                 onClick={() => onDelete(todo.id)}
                 title="Delete todo"
               >
-                🗑️
+                <i className="fa-solid fa-trash" aria-hidden></i>
               </button>
             </>
           )}
@@ -97,7 +101,6 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
           Created by: <strong>{getDisplayName(todo)}</strong>
           {getDisplayName(todo) === currentUser && " (You)"}
         </span>
-        <span className="todo-date">{formatDate(todo.createdAt)}</span>
       </div>
     </div>
   );

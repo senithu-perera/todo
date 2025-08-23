@@ -71,7 +71,7 @@ const TodoApp = () => {
         completed: false,
         createdBy: user.email,
         name: user.name || (user.email ? user.email.split("@")[0] : ""),
-        createdAt: new Date().toISOString(),
+        // Let the database set the timestamp
       };
 
       // Optimistic update
