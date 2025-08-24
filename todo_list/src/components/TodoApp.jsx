@@ -11,7 +11,6 @@ const TodoApp = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showSplash, setShowSplash] = useState(true);
-  const splashTimerRef = useRef(null);
   const { user, signOut } = useAuth();
 
   // Load todos when component mounts
@@ -154,23 +153,6 @@ const TodoApp = () => {
 
   const clearError = () => setError("");
 
-  // Auto-enter splash after 3 seconds with a small animation
-  useEffect(() => {
-    if (!showSplash) return;
-    // start timer
-    splashTimerRef.current = setTimeout(() => {
-      setShowSplash(false);
-      splashTimerRef.current = null;
-    }, 6000);
-
-    return () => {
-      if (splashTimerRef.current) {
-        clearTimeout(splashTimerRef.current);
-        splashTimerRef.current = null;
-      }
-    };
-  }, [showSplash]);
-
   if (loading) {
     return (
       <div className="loading-container">
@@ -203,7 +185,14 @@ const TodoApp = () => {
                 <h1>Our Todo List ♥</h1>
               </h1>
               <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
-              <div className="splash-actions"></div>
+              <div className="splash-actions">
+                <button
+                  className="enter-btn"
+                  onClick={() => setShowSplash(false)}
+                >
+                  Enter
+                </button>
+              </div>
             </div>
           </div>
         </div>

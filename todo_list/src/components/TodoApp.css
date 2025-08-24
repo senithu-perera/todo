@@ -171,21 +171,13 @@
     transform: translateY(-140vh) scale(0.95);
     opacity: 0;
   }
-  30% {
+  50% {
     transform: translateY(0) scale(1);
     opacity: 1;
-  }
-  60% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  85% {
-    transform: translateY(-140vh) scale(0.95);
-    opacity: 0;
   }
   100% {
-    transform: translateY(-140vh) scale(0.95);
-    opacity: 0;
+    transform: translateY(0) scale(1);
+    opacity: 1;
   }
 }
 
