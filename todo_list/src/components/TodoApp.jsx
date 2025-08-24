@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase, todosService } from "../lib/supabase";
@@ -10,6 +10,8 @@ const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showSplash, setShowSplash] = useState(true);
+  const splashTimerRef = useRef(null);
   const { user, signOut } = useAuth();
 
   // Load todos when component mounts
@@ -152,6 +154,23 @@ const TodoApp = () => {
 
   const clearError = () => setError("");
 
+  // Auto-enter splash after 2 seconds with a small animation
+  useEffect(() => {
+    if (!showSplash) return;
+    // start timer
+    splashTimerRef.current = setTimeout(() => {
+      setShowSplash(false);
+      splashTimerRef.current = null;
+    }, 2000);
+
+    return () => {
+      if (splashTimerRef.current) {
+        clearTimeout(splashTimerRef.current);
+        splashTimerRef.current = null;
+      }
+    };
+  }, [showSplash]);
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -171,10 +190,37 @@ const TodoApp = () => {
 
   return (
     <div className="todo-app">
+      {showSplash && (
+        <div className="splash-screen" role="dialog" aria-modal="true">
+          <div className="splash-card">
+            <div
+              className="splash-image"
+              aria-hidden
+              style={{ backgroundColor: "#9f50ffff" }}
+            ></div>
+            <h1 className="splash-title">Our Todo List ♥</h1>
+            <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
+            <div className="splash-actions">
+              <button
+                className="enter-btn"
+                onClick={() => {
+                  // clear the auto-enter timer if user manually enters early
+                  if (splashTimerRef.current) {
+                    clearTimeout(splashTimerRef.current);
+                    splashTimerRef.current = null;
+                  }
+                  setShowSplash(false);
+                }}
+              >
+                Enter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="todo-header">
-        <h1>Our Todo List ❤️</h1>
         <div className="user-info">
-          <span className="current-user">Welcome, {getDisplayName(user)}</span>
           <button
             className="sign-out-btn"
             onClick={handleSignOut}
@@ -189,7 +235,7 @@ const TodoApp = () => {
         <div className="error-banner">
           <span>{error}</span>
           <button onClick={clearError} className="error-close">
-            ×
+            x
           </button>
         </div>
       )}
