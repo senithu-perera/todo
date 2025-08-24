@@ -161,7 +161,7 @@ const TodoApp = () => {
     splashTimerRef.current = setTimeout(() => {
       setShowSplash(false);
       splashTimerRef.current = null;
-    }, 4000);
+    }, 6000);
 
     return () => {
       if (splashTimerRef.current) {
@@ -199,23 +199,11 @@ const TodoApp = () => {
               style={{ backgroundColor: "#9f50ffff" }}
             ></div>
             <div className="splash-content">
-              <h1 className="splash-title">Our Todo List ♥</h1>
+              <h1 className="splash-title">
+                <h1>Our Todo List ♥</h1>
+              </h1>
               <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
-              <div className="splash-actions">
-                <button
-                  className="enter-btn"
-                  onClick={() => {
-                    // clear the auto-enter timer if user manually enters early
-                    if (splashTimerRef.current) {
-                      clearTimeout(splashTimerRef.current);
-                      splashTimerRef.current = null;
-                    }
-                    setShowSplash(false);
-                  }}
-                >
-                  Enter
-                </button>
-              </div>
+              <div className="splash-actions"></div>
             </div>
           </div>
         </div>
