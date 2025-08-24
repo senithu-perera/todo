@@ -27,6 +27,23 @@
   }
 }
 
+/* New section layout */
+.todo-list-sections { display:flex; flex-direction:column; gap:18px }
+.todos-section { display:flex; flex-direction:column; gap:10px }
+.section-header { display:flex; align-items:center; gap:12px }
+.section-header h2 { margin:0; font-size:1rem; color: #fff }
+.section-meta { background: rgba(255,255,255,0.08); padding:4px 8px; border-radius:12px; font-size:0.85rem }
+.section-actions { margin-left: auto }
+.completed-toggle { background: transparent; border: none; color: #fff; font-size:1rem; cursor:pointer }
+.clear-completed { background: rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.08); padding:6px 10px; border-radius:10px; cursor:pointer }
+.clear-completed[disabled] { opacity:0.45; cursor:not-allowed }
+
+.completed-list.collapsed { display:none }
+
+/* Slightly reduce height for the completed list so active items stay prominent */
+.completed-list { max-height: 36vh; overflow-y: auto; padding-right:6px }
+
+
 /* scrollbar styling for modern browsers */
 .todo-list::-webkit-scrollbar {
   width: 10px;
