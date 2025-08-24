@@ -29,6 +29,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden; /* prevent page-wide horizontal scrolling */
+  /* disable pinch-zoom & double-tap zoom on supported browsers (improves app-like behavior)
+    NOTE: disabling zoom negatively impacts accessibility; keep only if acceptable */
+  touch-action: manipulation;
 }
 
 h1 {
