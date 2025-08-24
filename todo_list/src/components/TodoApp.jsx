@@ -154,14 +154,14 @@ const TodoApp = () => {
 
   const clearError = () => setError("");
 
-  // Auto-enter splash after 2 seconds with a small animation
+  // Auto-enter splash after 3 seconds with a small animation
   useEffect(() => {
     if (!showSplash) return;
     // start timer
     splashTimerRef.current = setTimeout(() => {
       setShowSplash(false);
       splashTimerRef.current = null;
-    }, 2000);
+    }, 4000);
 
     return () => {
       if (splashTimerRef.current) {
@@ -198,22 +198,24 @@ const TodoApp = () => {
               aria-hidden
               style={{ backgroundColor: "#9f50ffff" }}
             ></div>
-            <h1 className="splash-title">Our Todo List ♥</h1>
-            <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
-            <div className="splash-actions">
-              <button
-                className="enter-btn"
-                onClick={() => {
-                  // clear the auto-enter timer if user manually enters early
-                  if (splashTimerRef.current) {
-                    clearTimeout(splashTimerRef.current);
-                    splashTimerRef.current = null;
-                  }
-                  setShowSplash(false);
-                }}
-              >
-                Enter
-              </button>
+            <div className="splash-content">
+              <h1 className="splash-title">Our Todo List ♥</h1>
+              <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
+              <div className="splash-actions">
+                <button
+                  className="enter-btn"
+                  onClick={() => {
+                    // clear the auto-enter timer if user manually enters early
+                    if (splashTimerRef.current) {
+                      clearTimeout(splashTimerRef.current);
+                      splashTimerRef.current = null;
+                    }
+                    setShowSplash(false);
+                  }}
+                >
+                  Enter
+                </button>
+              </div>
             </div>
           </div>
         </div>
