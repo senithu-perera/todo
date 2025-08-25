@@ -25,7 +25,7 @@
   overflow-x: hidden;
 }
 
-.divider { margin-top: 100px }
+.divider { margin-top: 50px }
 
 /* Header */
 .todo-header {
@@ -40,7 +40,7 @@
   /* Keep header below the notch by using the safe-area inset value */
   top: var(--safe-top);
   z-index: 60;
-  background: linear-gradient(135deg, #a18cd1 0%, #6a4bc6 100%);
+  background: linear-gradient(135deg, #a18cd1 0%);
   border-radius: 0 0 14px 14px;
   box-shadow: 0 6px 28px rgba(80,50,150,0.12);
 }
