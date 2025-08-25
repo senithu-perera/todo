@@ -178,33 +178,7 @@ const TodoApp = () => {
   };
 
   return (
-    <div className="todo-app">
-      {showSplash && (
-        <div className="splash-screen" role="dialog" aria-modal="true">
-          <div className="splash-card">
-            <div
-              className="splash-image"
-              aria-hidden
-              style={{ backgroundColor: "#9f50ffff" }}
-            ></div>
-            <div className="splash-content">
-              <h1 className="splash-title">
-                <h1>Our Todo List ♥</h1>
-              </h1>
-              <p className="splash-welcome">Welcome, {getDisplayName(user)}</p>
-              <div className="splash-actions">
-                <button
-                  className="enter-btn"
-                  onClick={() => setShowSplash(false)}
-                >
-                  Enter
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
+    <>
       <header className="todo-header">
         <div className="user-info">
           <button
@@ -224,50 +198,80 @@ const TodoApp = () => {
         </div>
       </header>
 
-      {error && (
-        <div className="error-banner">
-          <span>{error}</span>
-          <button onClick={clearError} className="error-close">
-            x
-          </button>
-        </div>
-      )}
+      <div className="todo-app">
+        {showSplash && (
+          <div className="splash-screen" role="dialog" aria-modal="true">
+            <div className="splash-card">
+              <div
+                className="splash-image"
+                aria-hidden
+                style={{ backgroundColor: "#9f50ffff" }}
+              ></div>
+              <div className="splash-content">
+                <h1 className="splash-title">
+                  <h1>Our Todo List ♥</h1>
+                </h1>
+                <p className="splash-welcome">
+                  Welcome, {getDisplayName(user)}
+                </p>
+                <div className="splash-actions">
+                  <button
+                    className="enter-btn"
+                    onClick={() => setShowSplash(false)}
+                  >
+                    Enter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
-      <div className="divider" />
-
-      <div className="todo-content">
-        {/* Search Bar */}
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search todos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="search-clear"
-              title="Clear search"
-            >
-              ×
+        {error && (
+          <div className="error-banner">
+            <span>{error}</span>
+            <button onClick={clearError} className="error-close">
+              x
             </button>
-          )}
+          </div>
+        )}
+
+        <div className="divider" />
+
+        <div className="todo-content">
+          {/* Search Bar */}
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search todos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="search-clear"
+                title="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          <TodoList
+            todos={filteredTodos}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onEdit={editTodo}
+            currentUser={getDisplayName(user)}
+          />
         </div>
 
-        <TodoList
-          todos={filteredTodos}
-          onToggle={toggleTodo}
-          onDelete={deleteTodo}
-          onEdit={editTodo}
-          currentUser={getDisplayName(user)}
-        />
+        {/* Hidden AddTodo component for modal functionality */}
+        <AddTodo ref={addTodoRef} onAdd={addTodo} />
       </div>
-
-      {/* Hidden AddTodo component for modal functionality */}
-      <AddTodo ref={addTodoRef} onAdd={addTodo} />
-    </div>
+    </>
   );
 };
 
