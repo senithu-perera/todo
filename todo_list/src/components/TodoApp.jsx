@@ -11,6 +11,7 @@ const TodoApp = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showSplash, setShowSplash] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user, signOut } = useAuth();
 
   // Load todos when component mounts
@@ -153,6 +154,11 @@ const TodoApp = () => {
 
   const clearError = () => setError("");
 
+  // Filter todos based on search query
+  const filteredTodos = todos.filter((todo) =>
+    todo.text.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -223,8 +229,29 @@ const TodoApp = () => {
 
       <div className="todo-content">
         <AddTodo onAdd={addTodo} />
+
+        {/* Search Bar */}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search todos..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="search-clear"
+              title="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+
         <TodoList
-          todos={todos}
+          todos={filteredTodos}
           onToggle={toggleTodo}
           onDelete={deleteTodo}
           onEdit={editTodo}

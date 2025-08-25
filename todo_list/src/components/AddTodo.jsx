@@ -3,33 +3,78 @@ import "./AddTodo.css";
 
 const AddTodo = ({ onAdd }) => {
   const [text, setText] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
       onAdd(text.trim());
       setText("");
+      setIsModalOpen(false);
     }
   };
 
+  const handleCancel = () => {
+    setText("");
+    setIsModalOpen(false);
+  };
+
   return (
-    <form className="add-todo" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Add a new todo..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="add-todo-input"
-      />
-      <button type="submit" disabled={!text.trim()} title="Add todo">
-        <i
-          className="fa-solid fa-plus"
-          style={{ marginRight: 8 }}
-          aria-hidden
-        ></i>
-        Add
+    <>
+      {/* Add Todo Button */}
+      <button
+        className="add-todo-trigger"
+        onClick={() => setIsModalOpen(true)}
+        title="Add new todo"
+      >
+        <i className="fa-solid fa-plus" aria-hidden></i>
+        Add New Todo
       </button>
-    </form>
+
+      {/* Modal Popup */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={handleCancel}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Add New Todo</h3>
+              <button
+                className="modal-close"
+                onClick={handleCancel}
+                title="Close"
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <textarea
+                placeholder="What needs to be done?"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className="modal-textarea"
+                autoFocus
+                rows="3"
+              />
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="modal-btn cancel"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="modal-btn primary"
+                  disabled={!text.trim()}
+                >
+                  Add Todo
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
