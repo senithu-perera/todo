@@ -3,7 +3,7 @@ import TodoItem from "./TodoItem";
 import "./TodoList.css";
 
 const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
-  const [showCompleted, setShowCompleted] = useState(true);
+  const [activeTab, setActiveTab] = useState("active");
 
   const { activeTodos, completedTodos } = useMemo(() => {
     const active = [];
@@ -53,41 +53,27 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
 
   return (
     <div className="todo-list-sections">
-      <section className="todos-section todos-active">
-        <header className="section-header">
-          <h2>Active</h2>
-          <div className="section-meta">{activeTodos.length}</div>
-        </header>
-        <div className="todo-list">
-          {activeTodos.map((todo) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={onToggle}
-              onDelete={onDelete}
-              onEdit={onEdit}
-              currentUser={currentUser}
-            />
-          ))}
-        </div>
-      </section>
+      <div className="todo-tabs" role="tablist" aria-label="Todo filters">
+        <button
+          role="tab"
+          aria-selected={activeTab === "active"}
+          className={`tab-button ${activeTab === "active" ? "active" : ""}`}
+          onClick={() => setActiveTab("active")}
+        >
+          Active <span className="tab-count">{activeTodos.length}</span>
+        </button>
 
-      <section className="todos-section todos-completed">
-        <header className="section-header">
-          <button
-            className="completed-toggle"
-            onClick={() => setShowCompleted((s) => !s)}
-            aria-expanded={showCompleted}
-          >
-            {showCompleted ? (
-              <i className="fa-solid fa-caret-down" aria-hidden></i>
-            ) : (
-              <i className="fa-solid fa-caret-right" aria-hidden></i>
-            )}
-          </button>
-          <h2>Completed</h2>
-          <div className="section-meta">{completedTodos.length}</div>
-          <div className="section-actions">
+        <button
+          role="tab"
+          aria-selected={activeTab === "completed"}
+          className={`tab-button ${activeTab === "completed" ? "active" : ""}`}
+          onClick={() => setActiveTab("completed")}
+        >
+          Completed <span className="tab-count">{completedTodos.length}</span>
+        </button>
+
+        <div className="tab-actions">
+          {activeTab === "completed" && (
             <button
               className="clear-completed"
               onClick={clearCompleted}
@@ -95,21 +81,19 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
             >
               Clear completed
             </button>
-          </div>
-        </header>
-
-        <div
-          className={`todo-list completed-list ${
-            showCompleted ? "open" : "collapsed"
-          }`}
-        >
-          {showCompleted && completedTodos.length === 0 && (
-            <div className="todo-list-empty">
-              <p>No completed tasks yet.</p>
-            </div>
           )}
-          {showCompleted &&
-            completedTodos.map((todo) => (
+        </div>
+      </div>
+
+      <div className="tab-panel">
+        {activeTab === "active" && (
+          <div className="todo-list">
+            {activeTodos.length === 0 && (
+              <div className="todo-list-empty">
+                <p>No active todos yet.</p>
+              </div>
+            )}
+            {activeTodos.map((todo) => (
               <TodoItem
                 key={todo.id}
                 todo={todo}
@@ -119,8 +103,29 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
                 currentUser={currentUser}
               />
             ))}
-        </div>
-      </section>
+          </div>
+        )}
+
+        {activeTab === "completed" && (
+          <div className="todo-list completed-list">
+            {completedTodos.length === 0 && (
+              <div className="todo-list-empty">
+                <p>No completed tasks yet.</p>
+              </div>
+            )}
+            {completedTodos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onToggle={onToggle}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                currentUser={currentUser}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

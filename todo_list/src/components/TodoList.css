@@ -55,3 +55,36 @@
   background: rgba(106,75,198,0.25);
   border-radius: 8px;
 }
+
+/* Tabbed UI */
+.todo-tabs {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.tab-button {
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.tab-button.active {
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(80,50,150,0.08);
+}
+
+.tab-count { background: rgba(255,255,255,0.08); padding:2px 8px; border-radius:10px; font-weight:600 }
+
+.tab-actions { margin-left: auto }
+
+/* Ensure tab panels keep the same scroll behavior as the list */
+.tab-panel .todo-list { max-height: 55vh; overflow-y: auto }
+
