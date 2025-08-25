@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import "./AddTodo.css";
 
-const AddTodo = ({ onAdd }) => {
+const AddTodo = forwardRef(({ onAdd }, ref) => {
   const [text, setText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Expose open method to parent components
+  useImperativeHandle(ref, () => ({
+    open: () => setIsModalOpen(true),
+  }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,14 +27,7 @@ const AddTodo = ({ onAdd }) => {
   return (
     <>
       {/* Add Todo Button */}
-      <button
-        className="add-todo-trigger"
-        onClick={() => setIsModalOpen(true)}
-        title="Add new todo"
-      >
-        <i className="fa-solid fa-plus" aria-hidden></i>
-        Add New Todo
-      </button>
+
 
       {/* Modal Popup */}
       {isModalOpen && (
@@ -76,6 +74,6 @@ const AddTodo = ({ onAdd }) => {
       )}
     </>
   );
-};
+});
 
 export default AddTodo;

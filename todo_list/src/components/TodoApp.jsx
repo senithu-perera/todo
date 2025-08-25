@@ -13,6 +13,7 @@ const TodoApp = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const { user, signOut } = useAuth();
+  const addTodoRef = useRef(null);
 
   // Load todos when component mounts
   useEffect(() => {
@@ -207,6 +208,13 @@ const TodoApp = () => {
       <header className="todo-header">
         <div className="user-info">
           <button
+            className="add-in-header"
+            onClick={() => addTodoRef.current?.open()}
+            title="Add new todo"
+          >
+            <i className="fa-solid fa-plus" aria-hidden></i>
+          </button>
+          <button
             className="sign-out-btn"
             onClick={handleSignOut}
             title="Sign out"
@@ -228,8 +236,6 @@ const TodoApp = () => {
       <div className="divider" />
 
       <div className="todo-content">
-        <AddTodo onAdd={addTodo} />
-
         {/* Search Bar */}
         <div className="search-container">
           <input
@@ -258,6 +264,9 @@ const TodoApp = () => {
           currentUser={getDisplayName(user)}
         />
       </div>
+
+      {/* Hidden AddTodo component for modal functionality */}
+      <AddTodo ref={addTodoRef} onAdd={addTodo} />
     </div>
   );
 };

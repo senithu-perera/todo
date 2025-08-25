@@ -48,6 +48,27 @@
 .user-info { display:flex; gap:8px; align-items:center }
 .sign-out-btn { background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.14); padding:8px 12px; border-radius:14px }
 
+/* Header Add Button */
+.add-in-header {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 8px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+  min-width: 40px;
+}
+
+.add-in-header:hover {
+  background: rgba(255,255,255,0.24);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
+}
+
 /* Content area */
 .todo-content {
   width:100%;
