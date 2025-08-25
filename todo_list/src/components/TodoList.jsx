@@ -79,7 +79,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
               onClick={clearCompleted}
               disabled={completedTodos.length === 0}
             >
-              Clear completed
+              Clear
             </button>
           )}
         </div>
