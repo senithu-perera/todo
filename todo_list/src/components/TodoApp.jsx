@@ -172,14 +172,17 @@ const TodoApp = () => {
   // Helper to get display name from user object
   const getDisplayName = (userObj) => {
     if (!userObj) return "";
-    if (userObj.name) return userObj.name;
-    if (userObj.email) return userObj.email.split("@")[0];
+    if (userObj.name) return userObj.name.substring(0, 6);
+    if (userObj.email) return userObj.email.split("@")[0].substring(0, 6);
     return "";
   };
 
   return (
     <>
       <header className="todo-header">
+        <h4 className="user-name" title="Sign out">
+          ❤️ {getDisplayName(user)} ❤️
+        </h4>
         <div className="user-info">
           <button
             className="add-in-header"
@@ -188,6 +191,20 @@ const TodoApp = () => {
           >
             <i className="fa-solid fa-plus" aria-hidden></i>
           </button>
+
+          <button
+            className="youtube-btn"
+            onClick={() =>
+              window.open(
+                "https://music.youtube.com/playlist?list=PLShnD4RF0a5BnLuNtv6o0f0u9Lxlf_4LT&si=xUcPKYuGRKziMVd0",
+                "_blank"
+              )
+            }
+            title="Open YouTube"
+          >
+            <i className="fa-brands fa-youtube" aria-hidden></i>
+          </button>
+
           <button
             className="sign-out-btn"
             onClick={handleSignOut}
