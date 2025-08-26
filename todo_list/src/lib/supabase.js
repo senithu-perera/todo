@@ -89,3 +89,30 @@ export const todosService = {
       .subscribe()
   }
 }
+
+// Users table helpers (you manage your own user records)
+export const userService = {
+  // Fetch a user profile by auth user id
+  async getById(id) {
+    if (!supabase) return null
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single()
+    if (error && error.code !== 'PGRST116') throw error // not found is okay
+    return data || null
+  },
+
+  // Create or update a user profile
+  async upsert(profile) {
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase
+      .from('users')
+      .upsert(profile)
+      .select()
+      .single()
+    if (error) throw error
+    return data
+  }
+}

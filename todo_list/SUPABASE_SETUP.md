@@ -111,3 +111,36 @@ Your todo app now has:
 - ✅ Row-level security (all authenticated users share the same list)
 - ✅ Each todo shows who created it
 - ✅ Responsive design
+
+---
+
+## Users table for app-managed profiles (optional but recommended)
+
+If you want to manage your own user profiles in addition to Supabase Auth, create a `users` table and simple policies. The app will automatically create a profile row on first sign-in and use `display_name` for UI.
+
+Run this SQL in the SQL Editor:
+
+```sql
+create table if not exists public.users (
+    id uuid primary key references auth.users(id) on delete cascade,
+    email text unique not null,
+    display_name text not null,
+    created_at timestamp with time zone default now()
+);
+
+alter table public.users enable row level security;
+
+-- Read own profile
+create policy if not exists "read own profile" on public.users
+    for select using (auth.uid() = id);
+
+-- Create own profile (used on first login)
+create policy if not exists "insert own profile" on public.users
+    for insert with check (auth.uid() = id);
+
+-- Update own profile
+create policy if not exists "update own profile" on public.users
+    for update using (auth.uid() = id);
+```
+
+You can later expand this table with fields like avatar_url, preferences, roles, etc. The app reads `display_name` and falls back to the first 7 chars of the email prefix when missing.

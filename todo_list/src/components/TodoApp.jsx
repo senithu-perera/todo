@@ -12,7 +12,7 @@ const TodoApp = () => {
   const [error, setError] = useState("");
   const [showSplash, setShowSplash] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const addTodoRef = useRef(null);
 
   // Load todos when component mounts
@@ -73,7 +73,10 @@ const TodoApp = () => {
         text,
         completed: false,
         createdBy: user.email,
-        name: user.name || (user.email ? user.email.split("@")[0] : ""),
+        name:
+          (profile && profile.display_name) ||
+          user.name ||
+          (user.email ? user.email.split("@")[0] : ""),
         // Let the database set the timestamp
       };
 
@@ -171,9 +174,10 @@ const TodoApp = () => {
 
   // Helper to get display name from user object
   const getDisplayName = (userObj) => {
+    if (profile && profile.display_name) return profile.display_name;
     if (!userObj) return "";
-    if (userObj.name) return userObj.name.substring(0, 6);
-    if (userObj.email) return userObj.email.split("@")[0].substring(0, 6);
+    if (userObj.name) return userObj.name.substring(0, 7);
+    if (userObj.email) return userObj.email.split("@")[0].substring(0, 7);
     return "";
   };
 

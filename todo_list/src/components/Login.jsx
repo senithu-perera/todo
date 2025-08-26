@@ -5,6 +5,7 @@ import "./Login.css";
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
+  const [displayname, setDisplayname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,11 +28,11 @@ const Login = () => {
 
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(email, password, displayname);
         if (error) throw error;
         setMessage("Check your email for the confirmation link!");
       } else {
-        const { error } = await signIn(email, password);
+        const { error } = await signIn(email, password, displayname);
         if (error) throw error;
       }
     } catch (error) {
@@ -47,14 +48,26 @@ const Login = () => {
         <h1>{isSignUp ? "Sign Up" : "Sign In"}</h1>
         <p className="login-subtitle">
           {isSignUp
-            ? "Create an account to start managing your todos"
-            : "Welcome back! Sign in to access your todos"}
+            ? "Create an account to get Started"
+            : "Welcome back! Sign in"}
         </p>
 
         {error && <div className="error-message">{error}</div>}
         {message && <div className="success-message">{message}</div>}
 
         <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <input
+              type="name"
+              placeholder="Username"
+              value={displayname}
+              onChange={(e) => setDisplayname(e.target.value)}
+              required
+              disabled={loading}
+              maxLength={10}
+            />
+          </div>
+
           <div className="form-group">
             <input
               type="email"
