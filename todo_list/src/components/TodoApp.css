@@ -40,7 +40,8 @@
   /* Keep header below the notch by using the safe-area inset value */
   top: var(--safe-top);
   z-index: 60;
-  background: linear-gradient(135deg, #a18cd18a 0%);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(7px);
   border-radius: 0 0 14px 14px;
   box-shadow: 0 6px 28px rgba(80,50,150,0.12);
 }
