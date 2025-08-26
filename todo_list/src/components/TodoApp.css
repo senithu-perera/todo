@@ -301,5 +301,6 @@
   }
   .todo-content { 
     padding:12px;
+    height: 85vh;
   }
 }

@@ -32,7 +32,7 @@ const Login = () => {
         if (error) throw error;
         setMessage("Check your email for the confirmation link!");
       } else {
-        const { error } = await signIn(email, password, displayname);
+        const { error } = await signIn(displayname, password);
         if (error) throw error;
       }
     } catch (error) {
@@ -58,7 +58,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <input
-              type="name"
+              type="username"
               placeholder="Username"
               value={displayname}
               onChange={(e) => setDisplayname(e.target.value)}
@@ -68,16 +68,18 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
+          {isSignUp && (
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+          )}
 
           <div className="form-group">
             <input

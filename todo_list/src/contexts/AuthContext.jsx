@@ -95,12 +95,12 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
-  const signIn = async (email, password, _displayNameIgnored) => {
+  const signIn = async (username, password) => {
     const password_hash = await sha256(password);
     const { data, error } = await supabase
       .from("users")
       .select("id, email, display_name")
-      .eq("email", email)
+      .eq("display_name", username)
       .eq("password_hash", password_hash)
       .maybeSingle();
     if (error) return { data: null, error };
