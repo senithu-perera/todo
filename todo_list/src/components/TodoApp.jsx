@@ -205,9 +205,9 @@ const TodoApp = () => {
   return (
     <>
       <header className="todo-header">
-        <h4 className="user-name" title="Sign out">
-          ❤️ {getDisplayName(user)} ❤️
-        </h4>
+        <div className="user-name">
+          <h4 title="USer name">❤️ {getDisplayName(user)} ❤️</h4>
+        </div>
         <div className="user-info">
           <button
             className="add-in-header"
@@ -215,6 +215,14 @@ const TodoApp = () => {
             title="Add new todo"
           >
             <i className="fa-solid fa-plus" aria-hidden></i>
+          </button>
+
+          <button
+            className="refresh-btn"
+            onClick={() => window.location.reload()}
+            title="Refresh app"
+          >
+            <i className="fa-solid fa-rotate-right" aria-hidden></i>
           </button>
 
           <button
@@ -234,8 +242,9 @@ const TodoApp = () => {
             className="sign-out-btn"
             onClick={handleSignOut}
             title="Sign out"
+            aria-label="Sign out"
           >
-            Sign Out
+            <i className="fa-solid fa-right-from-bracket" aria-hidden></i>
           </button>
         </div>
       </header>

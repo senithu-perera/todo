@@ -36,7 +36,10 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
   position: sticky;
+  margin-bottom: 20px;
   /* Keep header below the notch by using the safe-area inset value */
   top: var(--safe-top);
   z-index: 60;
@@ -46,13 +49,57 @@
   box-shadow: 0 6px 28px rgba(80,50,150,0.12);
 }
 
-.user-info { display:flex; gap:8px; align-items:center }
-.sign-out-btn { background: rgba(171, 68, 255, 0.664); color:#fff; border:1px solid rgba(255,255,255,0.14); padding:8px 12px; border-radius:14px }
-.user-name { background: rgba(171, 68, 255, 0.664); color:#fff; border:1px solid rgba(255,255,255,0.14); padding:8px 10px;  margin-right: auto; border-radius:14px }
+.user-info { display:flex; flex-wrap: wrap;}
+.user-info button { flex-grow: 1; margin-right: 10px;}
+.sign-out-btn { background: rgba(171, 68, 255, 0.664); color:#fff; border:1px solid rgba(255,255,255,0.14); border-radius:14px; height: 40px; width: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 180ms ease }
+.sign-out-btn:hover { filter: brightness(1.05); transform: translateY(-1px) }
+
+.user-name {
+  background: rgba(171, 68, 255, 0.664);
+  width: 100%;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 8px 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center; /* center the text */
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  user-select: none;
+}
+
+.user-name h4{
+  margin: 10px;
+}
 
 /* Header Add Button */
 .add-in-header {
   background: rgba(171, 68, 255, 0.664);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+  width: 40px;
+  height: 40px;
+}
+
+.add-in-header:hover {
+  background: rgba(255,255,255,0.24);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
+}
+
+/* Refresh Button */
+.refresh-btn {
+  background: rgba(255,255,255,0.12);
   color: #fff;
   border: 1px solid rgba(255,255,255,0.14);
   padding: 8px 12px;
@@ -65,7 +112,7 @@
   min-width: 40px;
 }
 
-.add-in-header:hover {
+.refresh-btn:hover {
   background: rgba(255,255,255,0.24);
   border-color: rgba(255,255,255,0.2);
   transform: translateY(-1px);
@@ -76,14 +123,14 @@
   background: rgba(255, 0, 0, 0.2);
   color: #fff;
   border: 1px solid rgba(255, 0, 0, 0.3);
-  padding: 8px 12px;
   border-radius: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 180ms ease;
-  min-width: 40px;
+  width: 40px;
+  height: 40px;
 }
 
 .youtube-btn:hover {
@@ -289,6 +336,8 @@
   }
 }
 
+.refresh-btn { width: 40px; height: 40px }
+
 @media (max-width:600px) {
   .splash-title { 
     font-size:1.4rem;
@@ -304,4 +353,7 @@
     padding:12px;
     height: 85vh;
   }
+  .todo-header { gap: 6px 8px }
+  .user-info { width: 100%; justify-content: space-between }
+  .sign-out-btn { flex: 0 1 auto }
 }
