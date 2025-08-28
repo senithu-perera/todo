@@ -2,7 +2,14 @@ import React, { useMemo, useState } from "react";
 import TodoItem from "./TodoItem";
 import "./TodoList.css";
 
-const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
+const TodoList = ({
+  todos,
+  onToggle,
+  onDelete,
+  onEdit,
+  onEditDescription,
+  currentUser,
+}) => {
   const [activeTab, setActiveTab] = useState("active");
 
   const { activeTodos, completedTodos } = useMemo(() => {
@@ -100,6 +107,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
                 onToggle={onToggle}
                 onDelete={onDelete}
                 onEdit={onEdit}
+                onEditDescription={onEditDescription}
                 currentUser={currentUser}
               />
             ))}
@@ -120,6 +128,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, currentUser }) => {
                 onToggle={onToggle}
                 onDelete={onDelete}
                 onEdit={onEdit}
+                onEditDescription={onEditDescription}
                 currentUser={currentUser}
               />
             ))}

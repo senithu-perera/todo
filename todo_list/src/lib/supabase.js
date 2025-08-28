@@ -39,6 +39,7 @@ export const todosService = {
         {
           id: todo.id,
           text: todo.text,
+          description: todo.description,
           completed: todo.completed,
           created_by: todo.createdBy,
           created_at: todo.createdAt,

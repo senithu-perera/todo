@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import "./TodoItem.css";
 
-const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
+const TodoItem = ({
+  todo,
+  onToggle,
+  onDelete,
+  onEdit,
+  onEditDescription,
+  currentUser,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
+  const [showDescription, setShowDescription] = useState(false);
+  const [isDescModalOpen, setIsDescModalOpen] = useState(false);
+  const [descDraft, setDescDraft] = useState(todo.description || "");
 
   const handleEdit = () => {
     if (editText.trim()) {
@@ -77,6 +87,16 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
         <div className="todo-actions">
           {!isEditing && (
             <>
+              {todo.description && (
+                <button
+                  className="todo-desc-btn"
+                  onClick={() => setIsDescModalOpen(true)}
+                  aria-expanded={isDescModalOpen}
+                  title={"View / edit description"}
+                >
+                  <i className="fa-solid fa-align-left" aria-hidden></i>
+                </button>
+              )}
               <button
                 className="todo-edit-btn"
                 onClick={() => setIsEditing(true)}
@@ -95,6 +115,60 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, currentUser }) => {
           )}
         </div>
       </div>
+
+      {/* Inline preview still available when toggled, if you want to keep */}
+      {todo.description && showDescription && (
+        <div className="todo-description">{todo.description}</div>
+      )}
+
+      {isDescModalOpen && (
+        <div
+          className="modal-overlay"
+          onClick={() => setIsDescModalOpen(false)}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Description</h3>
+              <button
+                className="modal-close"
+                onClick={() => setIsDescModalOpen(false)}
+                title="Close"
+              >
+                ×
+              </button>
+            </div>
+            <div>
+              <textarea
+                className="modal-textarea"
+                placeholder="Add more details..."
+                value={descDraft}
+                onChange={(e) => setDescDraft(e.target.value)}
+                rows={8}
+              />
+            </div>
+            <div className="modal-actions">
+              <button
+                className="modal-btn cancel"
+                onClick={() => {
+                  setDescDraft(todo.description || "");
+                  setIsDescModalOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="modal-btn primary"
+                onClick={async () => {
+                  await onEditDescription?.(todo.id, descDraft.trim());
+                  setIsDescModalOpen(false);
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="todo-meta">
         <span className="todo-creator">

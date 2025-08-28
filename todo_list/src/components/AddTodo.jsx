@@ -3,6 +3,7 @@ import "./AddTodo.css";
 
 const AddTodo = forwardRef(({ onAdd }, ref) => {
   const [text, setText] = useState("");
+  const [description, setDescription] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Expose open method to parent components
@@ -13,21 +14,22 @@ const AddTodo = forwardRef(({ onAdd }, ref) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
-      onAdd(text.trim());
+      onAdd(text.trim(), description.trim());
       setText("");
+      setDescription("");
       setIsModalOpen(false);
     }
   };
 
   const handleCancel = () => {
     setText("");
+    setDescription("");
     setIsModalOpen(false);
   };
 
   return (
     <>
       {/* Add Todo Button */}
-
 
       {/* Modal Popup */}
       {isModalOpen && (
@@ -51,6 +53,13 @@ const AddTodo = forwardRef(({ onAdd }, ref) => {
                 className="modal-textarea"
                 autoFocus
                 rows="3"
+              />
+              <textarea
+                placeholder="Description (optional)"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="modal-textarea"
+                rows="4"
               />
               <div className="modal-actions">
                 <button

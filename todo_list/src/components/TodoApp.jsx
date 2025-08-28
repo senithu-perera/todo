@@ -66,11 +66,12 @@ const TodoApp = () => {
     }
   };
 
-  const addTodo = async (text) => {
+  const addTodo = async (text, description = "") => {
     try {
       const newTodo = {
         id: uuidv4(),
         text,
+        description,
         completed: false,
         createdBy: user.email,
         name:
@@ -143,6 +144,26 @@ const TodoApp = () => {
     } catch (error) {
       setError("Failed to edit todo: " + error.message);
       console.error("Error editing todo:", error);
+      // Revert optimistic update
+      loadTodos();
+    }
+  };
+
+  const editDescription = async (id, newDescription) => {
+    try {
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+
+      const updatedTodo = { ...todo, description: newDescription };
+
+      // Optimistic update
+      setTodos((prev) => prev.map((t) => (t.id === id ? updatedTodo : t)));
+
+      // Save to database
+      await todosService.updateTodo(id, { description: newDescription });
+    } catch (error) {
+      setError("Failed to edit description: " + error.message);
+      console.error("Error editing description:", error);
       // Revert optimistic update
       loadTodos();
     }
@@ -285,6 +306,7 @@ const TodoApp = () => {
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onEdit={editTodo}
+            onEditDescription={editDescription}
             currentUser={getDisplayName(user)}
           />
         </div>

@@ -96,6 +96,7 @@
   opacity: 1;
 }
 
+.todo-desc-btn,
 .todo-edit-btn,
 .todo-delete {
   background: transparent;
@@ -105,6 +106,10 @@
   border-radius: 8px;
   font-size: 16px;
   transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+.todo-desc-btn:hover {
+  background: rgba(106, 75, 198, 0.12);
 }
 
 .todo-edit-btn:hover {
@@ -124,6 +129,17 @@
   border-top: 1px solid #a18cd1;
   padding-top: 8px;
   margin-top: 5px;
+}
+
+.todo-description {
+  margin: 6px 0 8px 51px; /* indent to align after toggle button */
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.75);
+  border: 1px dashed rgba(161,140,209,0.5);
+  border-radius: 10px;
+  color: #4a2f6b;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 @keyframes itemPop {
@@ -152,6 +168,10 @@
   .todo-main {
     gap: 10px;
     margin-bottom: 8px;
+  }
+  
+  .todo-description {
+    margin-left: 46px; /* slightly smaller indent on mobile */
   }
   
   .todo-meta {

@@ -29,6 +29,7 @@ const supabaseAnonKey = "YOUR_ANON_KEY_HERE";
 CREATE TABLE todos (
     id UUID PRIMARY KEY,
     text TEXT NOT NULL,
+    description TEXT,
     completed BOOLEAN DEFAULT FALSE,
     created_by TEXT, -- stores the creator's email
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
