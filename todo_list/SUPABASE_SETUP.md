@@ -115,6 +115,87 @@ Your todo app now has:
 
 ---
 
+## Web Push Notifications (optional)
+
+To send notifications to users’ devices when new tasks are created:
+
+1. Generate VAPID keys (server-side once):
+
+Use any VAPID library (e.g., web-push for Node) to generate a public/private key pair. Store the public key in your app and the private key on the server that sends pushes.
+
+2. Add a table to store subscriptions:
+
+```sql
+create table if not exists public.push_subscriptions (
+    endpoint text primary key,
+    p256dh text not null,
+    auth text not null,
+    profile_name text,
+    created_at timestamp with time zone default now()
+);
+
+alter table public.push_subscriptions enable row level security;
+create policy "allow all" on public.push_subscriptions for all using (true) with check (true);
+```
+
+3. Configure the app:
+
+- Add VAPID public key to `.env`:
+
+```
+VITE_VAPID_PUBLIC_KEY=YOUR_PUBLIC_VAPID_KEY
+```
+
+- The app can register subscriptions via the bell icon in the header.
+
+4. Server to send the push on INSERT:
+
+Use a minimal server (Edge Function or any Node server) that:
+
+- Listens to `todos` INSERT (via webhook or Supabase realtime) OR runs on a cron.
+- Reads all rows in `push_subscriptions`.
+- Sends a push to each endpoint with payload `{ title, body, url }` using your VAPID private key.
+
+Example (Node, web-push):
+
+```js
+import webpush from "web-push";
+import { createClient } from "@supabase/supabase-js";
+
+webpush.setVapidDetails(
+  "mailto:you@example.com",
+  process.env.VAPID_PUBLIC,
+  process.env.VAPID_PRIVATE
+);
+
+export async function sendNewTodoNotification(todo) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE
+  );
+  const { data: subs } = await supabase.from("push_subscriptions").select("*");
+  const payload = JSON.stringify({
+    title: "New Task",
+    body: `${todo.name || "Someone"} added: ${todo.text}`,
+    url: process.env.APP_BASE_URL || "/",
+  });
+  await Promise.all(
+    (subs || []).map((s) =>
+      webpush
+        .sendNotification(
+          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+          payload
+        )
+        .catch(() => {})
+    )
+  );
+}
+```
+
+Note: The client cannot send push notifications directly; a server with the VAPID private key must do it.
+
+---
+
 ## Users table for app-managed profiles (optional but recommended)
 
 If you want to manage your own user profiles in addition to Supabase Auth, create a `users` table and simple policies. The app will automatically create a profile row on first sign-in and use `display_name` for UI.

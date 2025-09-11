@@ -56,3 +56,54 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
+// Handle Web Push events
+self.addEventListener('push', (event) => {
+  try {
+    const data = event.data ? event.data.json() : {};
+    const title = data.title || 'New Todo';
+    const options = {
+      body: data.body || 'A new task was created',
+      icon: data.icon || '/PWA-192.png',
+      badge: data.badge || '/PWA-192.png',
+      data: {
+        url: data.url || '/',
+        ...data
+      }
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (e) {
+    // fallback if payload isn't JSON
+    event.waitUntil(self.registration.showNotification('New Todo', {
+      body: 'A new task was created',
+    }));
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification && event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
+  );
+});
+
+// Attempt to resubscribe if the push subscription changes (edge case)
+self.addEventListener('pushsubscriptionchange', async (event) => {
+  try {
+    const applicationServerKey = self.applicationServerKey || undefined;
+    const subscription = await self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey });
+    // Notify clients to persist new subscription
+    const allClients = await clients.matchAll({ includeUncontrolled: true });
+    for (const client of allClients) {
+      client.postMessage({ type: 'PUSH_SUBSCRIPTION_CHANGED', payload: subscription });
+    }
+  } catch (e) {
+    // ignore
+  }
+});

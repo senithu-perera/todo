@@ -5,6 +5,7 @@ import { supabase, todosService } from "../lib/supabase";
 import TodoList from "./TodoList";
 import AddTodo from "./AddTodo";
 import "./TodoApp.css";
+import { enablePushNotifications } from "../lib/push";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -86,6 +87,27 @@ const TodoApp = () => {
 
       // Save to database
       await todosService.addTodo(newTodo);
+
+      // Notify subscribers via Edge Function (if configured)
+      try {
+        const senderUrl = "https://jbogmlholrmgsdhicocb.supabase.co/functions/v1/bright-worker";
+        if (senderUrl) {
+          await fetch(senderUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impib2dtbGhvbHJtZ3NkaGljb2NiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5MzczNDMsImV4cCI6MjA3MTUxMzM0M30.fC4QQi5AIkfslpoMghCsVxKlpOB9TEW4nqwPA4yUpUQ`,
+            },
+            body: JSON.stringify({
+              id: newTodo.id,
+              text: newTodo.text,
+              name: newTodo.name,
+            }),
+          });
+        }
+      } catch (e) {
+        console.warn("Push sender call failed:", e);
+      }
     } catch (error) {
       setError("Failed to add todo: " + error.message);
       console.error("Error adding todo:", error);
@@ -215,6 +237,22 @@ const TodoApp = () => {
             title="Add new todo"
           >
             <i className="fa-solid fa-plus" aria-hidden></i>
+          </button>
+
+          <button
+            className="add-in-header"
+            onClick={async () => {
+              try {
+                await enablePushNotifications(getDisplayName(user));
+                alert("Notifications enabled");
+              } catch (e) {
+                alert("Enable failed: " + (e?.message || e));
+              }
+            }}
+            title="Enable notifications"
+            aria-label="Enable notifications"
+          >
+            <i className="fa-solid fa-bell" aria-hidden></i>
           </button>
 
           <button
