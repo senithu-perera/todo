@@ -1,0 +1,24 @@
+{
+  "name": "Our Todo List",
+  "short_name": "Pinky Promise",
+  "description": "This is to keep track of our todos once we meet",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#764ba2",
+  "theme_color": "#a18cd1",
+  "icons": [
+    {
+      "src": "/PWA-192.png",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/PWA.png",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}
