@@ -23,6 +23,13 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const url = event.request.url;
+  
+  // Skip non-http(s) requests (chrome-extension, etc.)
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return;
+  }
+
   // navigation requests: serve index.html from cache (app shell)
   if (event.request.mode === 'navigate') {
     event.respondWith(
