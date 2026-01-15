@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import "./ImageConverter.css";
 
 // Target dimensions for bitmap output
@@ -16,14 +16,21 @@ const ImageConverter = ({ onBack }) => {
     brightness: 100,
     contrast: 100,
     saturation: 100,
-    grayscale: false,
-    sepia: false,
-    invert: false,
     warmth: 0, // -100 to 100 (cool to warm)
   });
   
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
+  const resultRef = useRef(null);
+
+  // Scroll to result when conversion is complete
+  useEffect(() => {
+    if (convertedImage && resultRef.current) {
+      setTimeout(() => {
+        resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [convertedImage]);
 
   const handleImageUpload = useCallback((e) => {
     const file = e.target.files?.[0];
@@ -43,9 +50,6 @@ const ImageConverter = ({ onBack }) => {
       brightness: 100,
       contrast: 100,
       saturation: 100,
-      grayscale: false,
-      sepia: false,
-      invert: false,
       warmth: 0,
     });
   }, []);
@@ -56,7 +60,7 @@ const ImageConverter = ({ onBack }) => {
 
   // Apply filters to image data
   const applyFilters = useCallback((data) => {
-    const { brightness, contrast, saturation, grayscale, sepia, invert, warmth } = filters;
+    const { brightness, contrast, saturation, warmth } = filters;
     
     for (let i = 0; i < data.length; i += 4) {
       let r = data[i];
@@ -93,29 +97,6 @@ const ImageConverter = ({ onBack }) => {
         const factor = warmth / 100;
         r += factor * 30;
         b -= factor * 30;
-      }
-
-      // Grayscale
-      if (grayscale) {
-        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-        r = g = b = gray;
-      }
-
-      // Sepia
-      if (sepia) {
-        const tr = 0.393 * r + 0.769 * g + 0.189 * b;
-        const tg = 0.349 * r + 0.686 * g + 0.168 * b;
-        const tb = 0.272 * r + 0.534 * g + 0.131 * b;
-        r = tr;
-        g = tg;
-        b = tb;
-      }
-
-      // Invert
-      if (invert) {
-        r = 255 - r;
-        g = 255 - g;
-        b = 255 - b;
       }
 
       // Clamp values
@@ -349,29 +330,6 @@ const ImageConverter = ({ onBack }) => {
             </div>
           </div>
 
-          {/* Toggle Filters */}
-          <div className="filter-toggles">
-            <button
-              className={`toggle-btn ${filters.grayscale ? "active" : ""}`}
-              onClick={() => updateFilter("grayscale", !filters.grayscale)}
-            >
-              <i className="fa-solid fa-droplet"></i> Grayscale
-            </button>
-
-            <button
-              className={`toggle-btn ${filters.sepia ? "active" : ""}`}
-              onClick={() => updateFilter("sepia", !filters.sepia)}
-            >
-              <i className="fa-solid fa-image"></i> Sepia
-            </button>
-
-            <button
-              className={`toggle-btn ${filters.invert ? "active" : ""}`}
-              onClick={() => updateFilter("invert", !filters.invert)}
-            >
-              <i className="fa-solid fa-circle-half-stroke"></i> Invert
-            </button>
-          </div>
         </div>
 
         {/* Convert Button */}
@@ -393,7 +351,7 @@ const ImageConverter = ({ onBack }) => {
 
         {/* Result */}
         {convertedImage && (
-          <div className="result-area">
+          <div className="result-area" ref={resultRef}>
             <h3>Result (320×480)</h3>
             <img src={convertedImage} alt="Converted" className="result-image" />
             <button className="download-btn" onClick={downloadImage}>
