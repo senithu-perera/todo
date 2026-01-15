@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { supabase, todosService } from "../lib/supabase";
 import TodoList from "./TodoList";
 import AddTodo from "./AddTodo";
+import ImageConverter from "./ImageConverter";
 import "./TodoApp.css";
 import { enablePushNotifications } from "../lib/push";
 
@@ -13,6 +14,7 @@ const TodoApp = () => {
   const [error, setError] = useState("");
   const [showSplash, setShowSplash] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState("todos"); // "todos" or "converter"
   const { user, profile, signOut } = useAuth();
   const addTodoRef = useRef(null);
 
@@ -224,6 +226,11 @@ const TodoApp = () => {
     return "";
   };
 
+  // Render Image Converter page
+  if (currentPage === "converter") {
+    return <ImageConverter onBack={() => setCurrentPage("todos")} />;
+  }
+
   return (
     <>
       <header className="todo-header">
@@ -261,6 +268,14 @@ const TodoApp = () => {
             title="Refresh app"
           >
             <i className="fa-solid fa-rotate-right" aria-hidden></i>
+          </button>
+
+          <button
+            className="converter-btn"
+            onClick={() => setCurrentPage("converter")}
+            title="Image to Bitmap Converter"
+          >
+            <i className="fa-solid fa-image" aria-hidden></i>
           </button>
 
           <button

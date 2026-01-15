@@ -118,6 +118,27 @@
   transform: translateY(-1px);
 }
 
+/* Image Converter Button */
+.converter-btn {
+  background: rgba(16, 185, 129, 0.3);
+  color: #fff;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+  width: 40px;
+  height: 40px;
+}
+
+.converter-btn:hover {
+  background: rgba(16, 185, 129, 0.45);
+  border-color: rgba(16, 185, 129, 0.6);
+  transform: translateY(-1px);
+}
+
 /* YouTube Button */
 .youtube-btn {
   background: rgba(255, 0, 0, 0.2);
