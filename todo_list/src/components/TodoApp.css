@@ -118,11 +118,11 @@
   transform: translateY(-1px);
 }
 
-/* Image Converter Button */
-.converter-btn {
-  background: rgba(16, 185, 129, 0.3);
+/* Mystery Button */
+.converter-btn.mystery-btn {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(239, 71, 111, 0.4));
   color: #fff;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  border: 1px solid rgba(124, 58, 237, 0.5);
   border-radius: 14px;
   cursor: pointer;
   display: flex;
@@ -131,12 +131,18 @@
   transition: all 180ms ease;
   width: 40px;
   height: 40px;
+  animation: mysteryPulse 2s ease-in-out infinite;
 }
 
-.converter-btn:hover {
-  background: rgba(16, 185, 129, 0.45);
-  border-color: rgba(16, 185, 129, 0.6);
-  transform: translateY(-1px);
+@keyframes mysteryPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(124, 58, 237, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(239, 71, 111, 0.6); }
+}
+
+.converter-btn.mystery-btn:hover {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(239, 71, 111, 0.6));
+  border-color: rgba(239, 71, 111, 0.7);
+  transform: translateY(-1px) scale(1.05);
 }
 
 /* YouTube Button */
