@@ -228,18 +228,6 @@ const ImageConverter = ({ onBack }) => {
 
   return (
     <div className="image-converter">
-      {/* Coming Soon Overlay */}
-      <div className="coming-soon-overlay">
-        <div className="coming-soon-content">
-          <i className="fa-solid fa-wand-magic-sparkles"></i>
-          <h2>A Mystery is Coming Soon</h2>
-          <p>Something exciting is being prepared...</p>
-          <button className="back-home-btn" onClick={onBack}>
-            <i className="fa-solid fa-arrow-left"></i> Go Back
-          </button>
-        </div>
-      </div>
-
       <header className="converter-header">
         <button className="back-btn" onClick={onBack} title="Back to todos">
           <i className="fa-solid fa-arrow-left" aria-hidden></i>

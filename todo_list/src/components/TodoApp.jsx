@@ -271,11 +271,11 @@ const TodoApp = () => {
           </button>
 
           <button
-            className="converter-btn mystery-btn"
+            className="converter-btn"
             onClick={() => setCurrentPage("converter")}
-            title="???"
+            title="Image to Bitmap Converter"
           >
-            <i className="fa-solid fa-question" aria-hidden></i>
+            <i className="fa-solid fa-image" aria-hidden></i>
           </button>
 
           <button
